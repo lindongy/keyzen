@@ -10,11 +10,11 @@ data.consecutive = 5;
 data.word_length = 7;
 data.current_layout = "qwerty";
 layouts={};
-layouts["qwerty"] = " jfkdlsahgyturieowpqbnvmcxz6758493021`-=[]\\;',./ABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*()_+{}|:\"<>?";
-layouts["azerty"] = " jfkdlsmqhgyturieozpabnvcxw6758493021`-=[]\\;',./ABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*()_+{}|:\"<>?";
-layouts["colemak"] = " ntesiroahdjglpufywqbkvmcxz1234567890'\",.!?:;/@$%&#*()_ABCDEFGHIJKLMNOPQRSTUVWXYZ~+-={}|^<>`[]\\";
-layouts["bépo"] = " tesirunamc,èvodpléjbk'.qxghyfàzw6758493021`-=[]\\;/ABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*()_+{}|:\"<>?";
-layouts["norman"] = " ntieosaygjkufrdlw;qbpvmcxz1234567890'\",.!?:;/@$%&#*()_ABCDEFGHIJKLMNOPQRSTUVWXYZ~+-={}|^<>`[]\\";
+layouts["qwerty"] =  " jfkdlsahgyturieowpqbnvmcxz6758493021`-=[]\\;',./ABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*()_+{}|:\"<>?";
+layouts["azerty"] =  " jfkdlsmqhgyturieozpabnvcxw6758493021`-=[]\\;',./ABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*()_+{}|:\"<>?";
+layouts["colemak"] = " ntesiroahdjglpufywqbkvmcxz5674839201'\",.!?:;/@$%&#*()_ABCDEFGHIJKLMNOPQRSTUVWXYZ~+-={}|^<>`[]\\";
+layouts["dvorak"] =  " hutenosadifygpcrlxbkmjwqvz5674839201`',.-=[]\\;/ABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*()_+{}|:\"<>?";
+layouts["norman"] =  " ntieosaygjkufrdlw;qbpvmcxz1234567890'\",.!?:;/@$%&#*()_ABCDEFGHIJKLMNOPQRSTUVWXYZ~+-={}|^<>`[]\\";
 layouts["code-es6"] = " {}',;():.>=</_-|`!?#[]\\+\"@$%&*~^";
 
 $(document).ready(function() {
@@ -81,28 +81,38 @@ function set_layout(l) {
 function keyHandler(e) {
     start_stats();
 
-    var key = String.fromCharCode(e.which);
-    if (data.chars.indexOf(key) > -1){
-        e.preventDefault();
-    }
-    else {
-    	return;
-    }
-    data.keys_hit += key;
-    if(key == data.word[data.word_index]) {
-        hits_correct += 1;
-        data.in_a_row[key] += 1;
-        (new Audio("click.wav")).play();
-    }
-    else {
-        hits_wrong += 1;
-        data.in_a_row[data.word[data.word_index]] = 0;
-        data.in_a_row[key] = 0;
-        (new Audio("clack.wav")).play();
-        data.word_errors[data.word_index] = true;
-    }
-    data.word_index += 1;
-    if (data.word_index >= data.word.length) {
+    do {
+        if (e.which == 13){ // == '\n'
+            data.word_index = data.word.length + 1;
+            break;
+        }
+        var key = String.fromCharCode(e.which);
+        if (data.chars.indexOf(key) > -1){
+            e.preventDefault();
+        }
+        else {
+            return;
+        }
+        if (data.word_index == data.word.length){
+            break;
+        }
+        data.keys_hit += key;
+        if(key == data.word[data.word_index]) {
+            hits_correct += 1;
+            data.in_a_row[key] += 1;
+            (new Audio("click.wav")).play();
+        }
+        else {
+            hits_wrong += 1;
+            data.in_a_row[data.word[data.word_index]] = 0;
+            data.in_a_row[key] = 0;
+            (new Audio("clack.wav")).play();
+            data.word_errors[data.word_index] = true;
+        }
+        data.word_index += 1;
+    }while(false)
+
+    if (data.word_index > data.word.length) {
         setTimeout(next_word, 400);
     }
 
@@ -152,6 +162,7 @@ function render() {
     render_word();
     render_level_bar();
     render_rigor();
+    render_reset();
     render_stats();
 }
 
@@ -197,9 +208,9 @@ function render_level() {
 
 function render_rigor() {
     chars = "<span id='rigor-number' onclick='inc_rigor();'>";
-    chars += '' + data.consecutive;
+    chars += 'click to set required repititions: ' + data.consecutive;
     chars += '<span>';
-    $('#rigor').html('click to set required repititions: ' + chars);
+    $('#rigor').html(chars);
 }
 
 function render_stats() {
@@ -217,6 +228,24 @@ function inc_rigor() {
     render_rigor();
 }
 
+function render_reset() {
+    chars = "<span class='reset' onclick='reset();'>";
+    chars += "click to reset";
+    chars += '<span>';
+    $('#reset').html(chars);
+}
+
+function reset() {
+    layout = data.current_layout;
+    localStorage.clear();
+    hits_correct = 0;
+    hits_wrong = 0;
+    start_time = 0;
+    hpm = 0;
+    ratio = 0;
+    set_layout(layout);
+    set_level(1);
+}
 
 function render_level_bar() {
     training_chars = get_training_chars();
@@ -231,8 +260,7 @@ function render_level_bar() {
     }
     m = Math.floor($('#level-chars-wrap').innerWidth() * Math.min(1.0, m / data.consecutive));
     $('#next-level').css({'width': '' + m + 'px'});
-    
-}   
+}
 
 function render_word() {
     var word = "";
@@ -277,6 +305,7 @@ function render_word() {
     for(var i = data.word_index; i < data.word_length; i++) {
         keys_hit += "&nbsp;";
     }
+    keys_hit += "â†µ";
     keys_hit += "</span>";
     $("#word").html(word + "<br>" + keys_hit);
 }
@@ -293,6 +322,7 @@ function generate_word() {
             word += choose(get_level_chars());
         }
     }
+    word += 'â†µ';
     return word;
 }
 

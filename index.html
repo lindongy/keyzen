@@ -7,29 +7,29 @@
         <title>keyzen</title>
         <script src="jquery.js"></script>
         <script src="keyzen.js"></script>
-		<meta charset="UTF-8">
-		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 
         <style>
 
             @font-face {
-              font-family: 'Ubuntu Monokz';
-              font-style: normal;
-              font-weight: normal;
-              src: local('Ubuntu Monokz'), local('UbuntuMono-Regular'), url('ubuntu-mono.woff') format('woff');
+                font-family: 'Ubuntu Monokz';
+                font-style: normal;
+                font-weight: normal;
+                src: local('Ubuntu Monokz'), local('UbuntuMono-Regular'), url('ubuntu-mono.woff') format('woff');
             }
 
             body {
                 background-image: url('brushed_alu.png');
                 font-family: 'Ubuntu Monokz', sans-serif;
-                padding: 0; 
+                padding: 0;
                 margin: 0;
                 -webkit-touch-callout: none;
                 -webkit-user-select: none;
                 -khtml-user-select: none;
                 -moz-user-select: none;
                 -ms-user-select: none;
-                user-select: none;            
+                user-select: none;
             }
 
             #container {
@@ -51,15 +51,18 @@
                 margin-left: auto;
                 margin-right:auto;
                 word-wrap: break-word;
-            	text-shadow: 0px 2px 3px #000;
+                font-family: 'Ubuntu Monokz';
+                text-shadow: 0px 2px 3px #000;
             }
-            
+
             .keys-hit {
                 color: #CCC;
                 font-size: 128px;
-            	text-shadow: none;
+                text-shadow: none;
+                margin-left: auto;
+                font-family: 'Ubuntu Monokz';
             }
-            
+
             #next-level {
                 height: 2px;
                 background-color: #f78d1d;
@@ -79,9 +82,33 @@
                 cursor: hand;
                 color: #AAAAAA;
             }
-            
+
+            #stats {
+                font-size: 16px;
+                width: 33.33%;
+                position: absolute;
+                left: 16px;
+                bottom: 16px;
+                color: #AAA;
+                font-weight: bold;
+                text-align: left;
+            }
+
+            #reset {
+                font-size: 16px;
+                width: 33.33%;
+                margin-left: 33.33%;
+                position: absolute;
+                bottom: 16px;
+                font-weight: bold;
+                text-align: center;
+                color: #000;
+                cursor: hand;
+            }
+
             #rigor {
                 font-size: 16px;
+                width: 33.33%;
                 position: absolute;
                 right: 16px;
                 bottom: 16px;
@@ -90,34 +117,24 @@
                 text-align: right;
             }
 
-            #stats {
-                font-size: 16px;
-                position: absolute;
-                left: 16px;
-                bottom: 16px;
-                color: #AAA;
-                font-weight: bold;
-                text-align: right;
-            }
-            
             #rigor-number {
                 color: #000;
                 cursor: hand;
-            }   
+            }
 
             .currentChar {
                 border-bottom: 4px solid #f78d1d;
             }
-            
+
             .errorChar {
                 color: #FF0000;
             }
-            
+
             .goodChar {
                 color: #AAAAAA;
-            	text-shadow: 0px 1px 1px #FFF, 0px 2px 2px #FFF;
+                text-shadow: 0px 1px 1px #FFF, 0px 2px 2px #FFF;
             }
-            
+
         </style>
 
     </head>
@@ -126,7 +143,7 @@
 
         <div id='container'>
 
-            <div id='layout'>
+            <div id='layout' style="margin-top: 2%;">
             </div>
 
             <div id='level-chars'>
@@ -137,15 +154,18 @@
 
             <div id='word'>
             </div>
-            
-            <div id='rigor'>
+
+            <div id="stats" style="margin-bottom: 2%;">
             </div>
 
-            <div id="stats">
+            <div id='reset' style="margin-bottom: 2%;">
             </div>
 
-        </div>        
+            <div id='rigor' style="margin-bottom: 2%;">
+            </div>
+
+        </div>
 
     </body>
-    
+
 </html>
